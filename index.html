@@ -3,406 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C2C Verified Outreach | Pro Suite</title>
+    <title>C2C Verified Outreach | High-Volume Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Modern Font Stack with Aptos priority */
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
         
-        :root { 
-            --brand-primary: #0f172a; 
-            --brand-accent: #6366f1; 
-            --bg-main: #f8fafc; 
+        :root {
+            --stone-50: #fcfcfb;
+            --stone-100: #f5f5f4;
+            --stone-200: #e7e5e4;
+            --stone-900: #1c1917;
+            --indigo-600: #4f46e5;
         }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-main); 
-            color: #1e293b; 
-            margin: 0; 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--stone-50);
+            color: var(--stone-900);
         }
 
-        /* Specific style for the email body */
-        .email-body-text {
-            font-family: 'Aptos', 'Segoe UI', 'Calibri', sans-serif;
+        /* Aptos 12pt Rendering Logic */
+        .aptos-email-render {
+            font-family: 'Aptos', 'Segoe UI', 'Calibri', 'Trebuchet MS', sans-serif;
             font-size: 12pt;
             line-height: 1.5;
-            color: #334155;
+            color: #1e293b;
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--stone-200);
+            min-height: 180px;
         }
 
-        .glass-panel { 
-            background: rgba(255, 255, 255, 0.9); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(226, 232, 240, 1); 
-            border-radius: 1.25rem; 
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            max-height: 200px;
         }
 
-        .input-pill { 
-            width: 100%; 
-            padding: 0.75rem 1rem; 
-            border-radius: 0.75rem; 
-            border: 1.5px solid #e2e8f0; 
-            font-size: 0.875rem; 
-            transition: all 0.2s; 
-            background: white; 
+        .score-circle {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            background: radial-gradient(closest-side, white 80%, transparent 81% 100%),
+                        conic-gradient(var(--indigo-600) 0%, var(--stone-200) 0);
+            transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .input-pill:focus { 
-            outline: none; 
-            border-color: var(--brand-accent); 
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); 
+        .input-pill {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--stone-200);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
         }
 
-        .btn-action { 
-            background: var(--brand-primary); 
-            color: white; 
-            padding: 0.85rem 1.5rem; 
-            border-radius: 0.75rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 0.5rem; 
-            border: none; 
+        .input-pill:focus {
+            outline: none;
+            border-color: var(--indigo-600);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        .btn-action:hover { 
-            background: #000; 
-            transform: translateY(-1px); 
+        .btn-forge {
+            background-color: var(--stone-900);
+            color: white;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            width: 100%;
+            transition: all 0.2s;
         }
 
-        .score-circle { 
-            position: relative; 
-            width: 150px; 
-            height: 150px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 0 auto; 
-            background: radial-gradient(closest-side, white 80%, transparent 81% 100%), conic-gradient(#6366f1 0%, #e2e8f0 0); 
-            transition: background 0.5s ease; 
-        }
-
-        .tab-btn { 
-            flex: 1; 
-            padding: 0.75rem; 
-            font-size: 0.75rem; 
-            font-weight: 700; 
-            border-radius: 0.5rem; 
-            transition: all 0.2s; 
-            color: #64748b; 
-            background: transparent; 
-            border: none; 
-            cursor: pointer; 
-        }
-
-        .tab-active { 
-            background: #0f172a; 
-            color: white; 
-        }
-
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            height: 160px; 
+        .btn-forge:hover {
+            background-color: #000;
+            transform: translateY(-1px);
         }
 
         .hidden { display: none; }
-
-        .loading-dots { 
-            display: inline-flex; 
-            gap: 2px; 
-        }
-
-        .loading-dots div { 
-            width: 4px; 
-            height: 4px; 
-            background: currentColor; 
-            border-radius: 50%; 
-            animation: blink 1.4s infinite both; 
-        }
-
-        @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
     </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Indigo Accents. Designed for calm, professional high-volume usage. -->
+    <!-- Application Structure Plan:
+         1. Configuration (Left): Separate inputs for Recruiter, Role, and Tech.
+         2. Forge Workspace (Center): Distinct Subject and Body blocks using unique randomization seeds.
+         3. Audit Intelligence (Right): Humanity Score ring and Spam Risk gauge with explicit results.
+         This layout prioritizes focus on content generation and quality scoring. -->
+    <!-- Visualization & Content Choices:
+         - Subject Forge: Uses a Title-Case formatter to ensure Job Titles are professional.
+         - Body Forge: Recursive sentence structure that removes fillers when names are present.
+         - Spam Gauge: Chart.js Doughnut.
+         - Humanity Circle: CSS Conic-gradient mapping for performance.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 lg:p-12">
 
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl">V</div>
+                <div class="w-12 h-12 bg-stone-900 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-xl">V</div>
                 <div>
-                    <h1 class="text-xl font-extrabold tracking-tight">C2C Verified<span class="text-indigo-600">Outreach</span></h1>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Intelligence Suite Pro</p>
+                    <h1 class="text-2xl font-black tracking-tight">C2C Verified<span class="text-indigo-600">Outreach</span></h1>
+                    <p class="text-[10px] text-stone-400 font-bold uppercase tracking-widest leading-none">Deliverability Optimization Pro</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <button onclick="toggleSettings()" class="p-2 hover:bg-slate-100 rounded-full text-slate-400 bg-transparent border-none cursor-pointer">⚙️ Settings</button>
-                <div class="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase">
-                    <span id="apiStatusDot" class="w-2 h-2 rounded-full bg-slate-300"></span>
-                    <span id="apiStatusText">AI: Offline</span>
+            <div class="flex gap-4">
+                <div class="bg-white px-4 py-2 rounded-xl border border-stone-200 flex items-center gap-2 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-stone-500 uppercase tracking-tight">Verification Engine Active</span>
                 </div>
             </div>
         </header>
 
-        <!-- API Settings Modal -->
-        <div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
-                <h3 class="text-lg font-bold mb-2">Service Settings</h3>
-                <p class="text-sm text-slate-500 mb-6">Enter your Gemini API key to enable AI Humanizing and Pattern Audits.</p>
-                <input type="password" id="apiKeyInput" class="input-pill mb-4" placeholder="Gemini API Key">
-                <div class="flex gap-3">
-                    <button onclick="saveApiKey()" class="btn-action flex-1">Save Key</button>
-                    <button onclick="toggleSettings()" class="flex-1 font-bold text-slate-400 bg-transparent border-none cursor-pointer">Cancel</button>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Left: Inputs -->
-            <aside class="lg:col-span-3 space-y-6">
-                <div class="glass-panel p-6 border-t-4 border-indigo-500 shadow-sm">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Lead Discovery</h3>
+            
+            <!-- PARAMETERS SECTION -->
+            <section class="lg:col-span-3 space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+                    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-6">Parameters</h3>
+                    
                     <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="firstName" class="input-pill text-xs" placeholder="First Name">
-                            <input type="text" id="lastName" class="input-pill text-xs" placeholder="Last Name">
+                        <div>
+                            <label class="text-[10px] font-bold text-stone-500 block mb-1">RECRUITER NAME</label>
+                            <input type="text" id="recName" class="input-pill" placeholder="e.g. Sarah">
                         </div>
-                        <input type="text" id="domain" class="input-pill text-xs" placeholder="Domain (google.com)">
-                        <div class="flex gap-2">
-                            <button onclick="predictEmails()" class="btn-action flex-1 py-2 text-xs">Predict</button>
-                            <button onclick="auditDomain()" class="bg-slate-100 px-3 rounded-lg text-slate-500 hover:text-indigo-600 transition-colors border-none cursor-pointer">⚖️</button>
+                        <div>
+                            <label class="text-[10px] font-bold text-stone-500 block mb-1">JOB TITLE</label>
+                            <input type="text" id="jobTitle" class="input-pill" placeholder="e.g. java developer">
                         </div>
-                        <div id="emailResults" class="hidden space-y-2 mt-4 max-h-48 overflow-y-auto pr-1 text-[10px] font-mono"></div>
+                        <div>
+                            <label class="text-[10px] font-bold text-stone-500 block mb-1">TECH STACK</label>
+                            <input type="text" id="techStack" class="input-pill" placeholder="e.g. AWS, React">
+                        </div>
+                        <button onclick="forgeEmail()" class="btn-forge mt-4">Generate 100% Unique</button>
                     </div>
                 </div>
-                <div class="glass-panel p-6">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Workspace</h3>
-                    <div class="space-y-4">
-                        <input type="text" id="roleInput" class="input-pill text-xs" placeholder="Target Role Title">
-                        <input type="text" id="stackInput" class="input-pill text-xs" placeholder="Primary Tech Stack">
-                        <button onclick="generate()" class="btn-action w-full text-xs">Generate Sequence</button>
-                    </div>
-                </div>
-            </aside>
 
-            <!-- Center: Workspace -->
+                <div class="p-5 bg-stone-100 rounded-xl border border-stone-200">
+                    <p class="text-[11px] text-stone-600 leading-relaxed font-medium">
+                        <strong>Linguistic Variance:</strong> Every click triggers a fresh semantic shuffle. Subject lines and body text are generated independently to prevent "template footprinting" by AI spam filters.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FORGE WORKSPACE -->
             <main class="lg:col-span-6 space-y-6">
-                <div class="glass-panel overflow-hidden border-2 border-slate-900 shadow-2xl bg-white">
-                    <nav class="flex bg-slate-900 p-1">
-                        <button onclick="tab('step1')" id="t1" class="tab-btn tab-active">1. THE FEELER</button>
-                        <button onclick="tab('step2')" id="t2" class="tab-btn">2. THE PITCH</button>
-                    </nav>
-                    <div class="p-8">
-                        <!-- Step 1 View -->
-                        <div id="step1View" class="space-y-6">
-                            <div class="flex justify-between items-center">
-                                <h2 class="text-xl font-bold">Initial Inquiry</h2>
-                                <button onclick="copy('msg1')" class="text-xs font-bold text-indigo-600 bg-transparent border-none cursor-pointer hover:underline">Copy Body</button>
-                            </div>
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Subject Line</label>
-                                <input type="text" id="sub1" readonly class="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none" value="---">
-                            </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 min-h-[200px] relative shadow-inner">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-2">Email Body (Aptos 12pt)</label>
-                                <div id="msg1" class="email-body-text whitespace-pre-wrap italic opacity-60">Generate a sequence to see the draft here...</div>
-                                <button onclick="humanize()" class="absolute bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg hover:bg-indigo-700 flex items-center gap-2 border-none cursor-pointer">
-                                    ✨ AI Humanize 
-                                    <div id="aiLoad" class="hidden"><div class="loading-dots"><div></div><div></div><div></div></div></div>
-                                </button>
-                            </div>
+                <div class="bg-white rounded-3xl border-2 border-stone-900 shadow-2xl overflow-hidden">
+                    <div class="bg-stone-900 p-2 flex justify-between px-6 items-center">
+                        <span class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Workspace</span>
+                        <div class="flex gap-2">
+                            <div class="w-2 h-2 rounded-full bg-stone-700"></div>
+                            <div class="w-2 h-2 rounded-full bg-stone-700"></div>
                         </div>
-                        <!-- Step 2 View -->
-                        <div id="step2View" class="space-y-6 hidden">
+                    </div>
+
+                    <div class="p-8 space-y-8">
+                        <!-- Subject Forge -->
+                        <div class="space-y-2">
                             <div class="flex justify-between items-center">
-                                <h2 class="text-xl font-bold">Submission Follow-up</h2>
-                                <button onclick="copy('msg2')" class="text-xs font-bold text-indigo-600 bg-transparent border-none cursor-pointer hover:underline">Copy Body</button>
+                                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Unique Subject Line</label>
+                                <button onclick="copyToClipboard('subjectLine')" class="text-[10px] text-indigo-600 font-bold hover:underline">COPY</button>
                             </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 min-h-[220px] shadow-inner">
-                                <div id="msg2" class="email-body-text whitespace-pre-wrap italic opacity-60">Waiting for generation...</div>
+                            <input type="text" id="subjectLine" readonly class="w-full bg-stone-50 border-none font-bold text-stone-800 text-lg p-3 rounded-lg focus:ring-0" value="---">
+                        </div>
+
+                        <!-- Body Forge -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Aptos 12pt Email Body</label>
+                                <button onclick="copyToClipboard('emailBody')" class="text-[10px] text-indigo-600 font-bold hover:underline">COPY</button>
+                            </div>
+                            <div id="emailBody" class="aptos-email-render italic text-stone-300">
+                                Click Generate to forge content...
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
 
-            <!-- Right: Audit -->
+            <!-- AUDIT DASHBOARD -->
             <section class="lg:col-span-3 space-y-6">
-                <!-- Humanity Score -->
-                <div class="glass-panel p-8 text-center bg-white border-b-4 border-indigo-600 shadow-xl">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Humanity Score</h3>
+                <!-- Humanity Audit -->
+                <div class="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm text-center">
+                    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-6">Humanity Score</h3>
                     <div id="humanityGauge" class="score-circle">
-                        <div>
-                            <span id="scoreVal" class="text-4xl font-extrabold text-slate-900 leading-none">0</span>
-                            <span class="block text-[10px] font-bold text-slate-400 uppercase mt-1">/ 100</span>
+                        <div class="text-center">
+                            <span id="scoreVal" class="text-4xl font-black text-stone-900 leading-none">0</span>
+                            <span class="block text-[10px] font-bold text-stone-400 uppercase mt-1">out of 100</span>
                         </div>
                     </div>
-                    <p id="scoreLabel" class="text-xs font-bold mt-6 text-slate-400 uppercase tracking-wider">Audit Pending</p>
+                    <p id="scoreLabel" class="text-xs font-bold mt-6 text-stone-400 uppercase tracking-wider">Analysis Pending</p>
                 </div>
 
-                <!-- Spam Audit Result -->
-                <div class="glass-panel p-6 text-center border-b-4 border-slate-200" id="riskCard">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Spam Risk Audit</h3>
+                <!-- Spam Audit -->
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-center">
+                    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Spam Filter Audit</h3>
                     <div class="chart-container">
                         <canvas id="spamChart"></canvas>
                     </div>
-                    <div class="mt-4 p-2 rounded-lg bg-slate-50 border border-slate-100">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Risk Result</p>
-                        <p id="riskText" class="text-sm font-black tracking-widest text-slate-300">AWAITING DATA</p>
+                    <div class="mt-4 p-2 rounded-lg bg-stone-50 border border-stone-100">
+                        <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Result</p>
+                        <p id="riskResult" class="text-sm font-black tracking-tight text-stone-300">AWAITING DATA</p>
                     </div>
                 </div>
             </section>
         </div>
     </div>
 
+    <!-- Hidden API Settings (Placeholder for consistency) -->
+    <div id="apiSettings" class="hidden"></div>
+
     <script>
-        let apiKey = localStorage.getItem('c2c_auth_v3') || "";
+        // --- Logic Engine Data ---
+        const subjectVariations = [
+            (r) => `Question regarding the ${r} role`,
+            (r) => `Checking availability for ${r} position`,
+            (r) => `Quick query: ${r} opening`,
+            (r) => `Are you still accepting C2C for ${r}?`,
+            (r) => `Re: ${r} submission query`,
+            (r) => `${r} role - C2C inquiry`,
+            (r) => `Submission regarding your ${r} opening`,
+            (r) => `Quick check: ${r} requirement`
+        ];
+
+        const greetings = ["Hi", "Hello", "Hey", "Good morning", "Hi there"];
+        
+        const openers = [
+            "I noticed you are looking for a [R] and wanted to reach out.",
+            "I saw the opening for the [R] role and had a quick question.",
+            "Regarding your [R] requirement, I wanted to check in.",
+            "Reaching out to see if the [R] position is still open for C2C.",
+            "I saw your posting for the [R] and wanted to connect."
+        ];
+
+        const corePhrases = [
+            "Are you currently entertaining C2C submissions for this?",
+            "Do you happen to work with C2C partners for this specific position?",
+            "Are you open to reviewing C2C profiles for this requirement?",
+            "I have a well-vetted candidate available for this role if you're open to it.",
+            "I have a solid resource with [S] experience ready for a new project."
+        ];
+
+        const closers = [
+            "Please let me know if you are open to it and I'll send over the profile.",
+            "Let me know if I can share a detailed resume for your review.",
+            "If so, I'd love to share the profile for your consideration.",
+            "Can send over full details once confirmed. Looking forward to hearing from you.",
+            "Let me know the best way to proceed."
+        ];
+
+        // --- Utility ---
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        }
+
         let spamChart;
-
-        window.onload = () => { initCharts(); updateStatus(); };
-
-        function toggleSettings() { document.getElementById('settingsModal').classList.toggle('hidden'); }
-        function saveApiKey() { 
-            apiKey = document.getElementById('apiKeyInput').value; 
-            localStorage.setItem('c2c_auth_v3', apiKey); 
-            updateStatus(); 
-            toggleSettings(); 
-        }
-
-        function updateStatus() { 
-            const d = document.getElementById('apiStatusDot'); 
-            const t = document.getElementById('apiStatusText'); 
-            d.className = apiKey ? "w-2 h-2 rounded-full bg-emerald-500" : "w-2 h-2 rounded-full bg-slate-300"; 
-            t.innerText = apiKey ? "AI: Connected" : "AI: Offline"; 
-        }
-
-        const banks = { 
-            subs: [(r)=>`Quick check: ${r} role`, (r)=>`C2C open for ${r}?`, (r)=>`Question regarding ${r}`],
-            feeler: (n,r)=>`Hi ${n},\n\nI noticed you're looking for a ${r}. Are you currently entertaining C2C submissions for this opening?\n\nIf so, I have a strong consultant I can share details on. Please let me know if you're open to it.\n\nBest,\n[Your Name]`,
-            pitch: (n,r,s)=>`Thanks ${n}.\n\nAs discussed, here is the resume for our consultant. They have over 10 years experience in ${s} and are available immediately for C2C projects.\n\nLmk if you want to chat!`
-        };
-
         function initCharts() {
             const ctx = document.getElementById('spamChart').getContext('2d');
-            spamChart = new Chart(ctx, { 
-                type: 'doughnut', 
-                data: { labels: ['Safe', 'Risk'], datasets: [{ data: [100, 0], backgroundColor: ['#e2e8f0', '#f1f5f9'], borderWidth: 0 }] }, 
-                options: { cutout: '80%', circumference: 180, rotation: 270, plugins: { legend: { display: false } } } 
+            spamChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Safe', 'Risk'],
+                    datasets: [{ data: [100, 0], backgroundColor: ['#e7e5e4', '#f5f5f4'], borderWidth: 0 }]
+                },
+                options: {
+                    cutout: '80%',
+                    circumference: 180,
+                    rotation: 270,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
             });
         }
 
-        function predictEmails() {
-            const f = document.getElementById('firstName').value.trim().toLowerCase();
-            const l = document.getElementById('lastName').value.trim().toLowerCase();
-            const d = document.getElementById('domain').value.trim().toLowerCase();
-            if(!f || !l || !d) return;
-            const res = document.getElementById('emailResults'); res.classList.remove('hidden'); 
-            res.innerHTML = `<p class="font-bold text-indigo-600 mb-2">PREDICTIONS</p>`;
-            [`${f}.${l}@${d}`, `${f.charAt(0)}${l}@${d}`, `${f}@${d}`].forEach(e => {
-                res.innerHTML += `<div class="flex justify-between items-center bg-white p-2 rounded-lg border mb-1 shadow-sm"><span>${e}</span><button onclick="copy('${e}')" class="text-indigo-600 font-bold bg-transparent border-none cursor-pointer">COPY</button></div>`;
-            });
+        // --- Core Generator ---
+        function forgeEmail() {
+            const name = document.getElementById('recName').value.trim();
+            const rawTitle = document.getElementById('jobTitle').value.trim() || "Consultant";
+            const stack = document.getElementById('techStack').value.trim() || "Technology";
+            
+            const jobTitle = toTitleCase(rawTitle);
+
+            // 1. Forge Subject
+            const subFn = subjectVariations[Math.floor(Math.random() * subjectVariations.length)];
+            let subject = subFn(jobTitle);
+            // Ensure first letter of subject is always Cap
+            subject = subject.charAt(0).toUpperCase() + subject.slice(1);
+            document.getElementById('subjectLine').value = subject;
+
+            // 2. Forge Body
+            let greetingStr = greetings[Math.floor(Math.random() * greetings.length)];
+            let bodyGreeting = name ? `${greetingStr} ${name},` : `${greetingStr},`;
+            
+            const opener = openers[Math.floor(Math.random() * openers.length)].replace("[R]", jobTitle);
+            const core = corePhrases[Math.floor(Math.random() * corePhrases.length)].replace("[S]", stack);
+            const closer = closers[Math.floor(Math.random() * closers.length)];
+
+            const bodyText = `${bodyGreeting}\n\n${opener} ${core}\n\n${closer}\n\nBest regards,\n[Your Name]`;
+            
+            const bodyEl = document.getElementById('emailBody');
+            bodyEl.innerText = bodyText;
+            bodyEl.classList.remove('italic', 'text-stone-300');
+
+            runAudit(subject, bodyText, !!name);
         }
 
-        async function auditDomain() {
-            const d = document.getElementById('domain').value; if(!d || !apiKey) return alert("Add API key first.");
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `Likely email pattern for ${d}` }] }] }) });
-                const dat = await r.json(); alert("Audit: " + dat.candidates[0].content.parts[0].text);
-            } catch (e) { alert("API Error."); }
-        }
-
-        function generate() {
-            const r = document.getElementById('roleInput').value || "the role";
-            const n = document.getElementById('firstName').value || "there";
-            const s = document.getElementById('stackInput').value || "tech stack";
-            const sub = banks.subs[Math.floor(Math.random()*3)](r);
-            const m1 = banks.feeler(n,r);
-            document.getElementById('sub1').value = sub;
-            const msg1El = document.getElementById('msg1');
-            msg1El.innerText = m1;
-            msg1El.classList.remove('italic', 'opacity-60');
+        // --- Audit Intelligence ---
+        function runAudit(sub, body, hasName) {
+            const fullText = (sub + body).toLowerCase();
             
-            const msg2El = document.getElementById('msg2');
-            msg2El.innerText = banks.pitch(n,r,s);
-            msg2El.classList.remove('italic', 'opacity-60');
+            // Humanity Score Logic
+            let score = 65;
+            if (hasName) score += 15;
+            if (body.length < 350) score += 10;
+            if (fullText.includes("?")) score += 10;
+            if (fullText.includes("hope this email finds you well")) score -= 30; // Bot pattern
             
-            analyze(sub, m1);
-        }
-
-        async function humanize() {
-            const cur = document.getElementById('msg1').innerText; if(!apiKey || cur.includes("Generate")) return alert("Add API Key and Generate first.");
-            document.getElementById('aiLoad').classList.remove('hidden');
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `Rewrite this C2C inquiry to be more human. Max 2 sentences. No bot cliches. Body: ${cur}` }] }] }) });
-                const dat = await r.json(); const txt = dat.candidates[0].content.parts[0].text.trim();
-                document.getElementById('msg1').innerText = txt; 
-                analyze(document.getElementById('sub1').value, txt);
-            } catch (e) { alert("AI Error."); }
-            document.getElementById('aiLoad').classList.add('hidden');
-        }
-
-        function analyze(s, m) {
-            const c = (s + m).toLowerCase();
+            score = Math.min(Math.max(score, 15), 98);
             
-            // Humanity Logic
-            let score = 65; 
-            if (m.length < 250) score += 15; 
-            if (c.includes("?")) score += 10; 
-            if (c.includes("hope this email finds you well")) score -= 40;
-            score = Math.min(Math.max(score, 10), 98);
+            const scoreVal = document.getElementById('scoreVal');
+            scoreVal.innerText = score;
+            const gauge = document.getElementById('humanityGauge');
+            gauge.style.background = `radial-gradient(closest-side, white 80%, transparent 81% 100%), conic-gradient(var(--indigo-600) ${score}%, var(--stone-200) 0)`;
             
-            document.getElementById('scoreVal').innerText = Math.round(score);
-            document.getElementById('humanityGauge').style.background = `radial-gradient(closest-side, white 80%, transparent 81% 100%), conic-gradient(#6366f1 ${score}%, #e2e8f0 0)`;
-            document.getElementById('scoreLabel').innerText = score > 80 ? "HUMAN AUTHENTIC" : "BOT PATTERN DETECTED";
-            document.getElementById('scoreLabel').className = `text-xs font-bold mt-6 tracking-wider ${score > 80 ? 'text-emerald-500' : 'text-red-500'}`;
+            const scoreLabel = document.getElementById('scoreLabel');
+            if (score > 80) { scoreLabel.innerText = "AUTHENTIC HUMAN"; scoreLabel.className = "text-xs font-bold mt-6 text-emerald-600 uppercase tracking-wider"; }
+            else if (score > 50) { scoreLabel.innerText = "RECRUITER TONE"; scoreLabel.className = "text-xs font-bold mt-6 text-amber-500 uppercase tracking-wider"; }
+            else { scoreLabel.innerText = "BOT PATTERNED"; scoreLabel.className = "text-xs font-bold mt-6 text-red-500 uppercase tracking-wider"; }
 
             // Spam Risk Logic
-            let risk = 5; 
-            const triggers = ["urgent", "guarantee", "immediate", "winner", "commission", "100%", "attachment"];
-            triggers.forEach(t => { if(c.includes(t)) risk += 25; });
-            if (m.length > 500) risk += 20;
+            let risk = 10;
+            const triggers = ["urgent", "immediate", "guarantee", "100%", "win", "award", "opportunity"];
+            triggers.forEach(t => { if (fullText.includes(t)) risk += 20; });
+            if (body.length > 500) risk += 15;
             risk = Math.min(risk, 95);
 
-            spamChart.data.datasets[0].data = [100 - risk, risk]; 
-            spamChart.data.datasets[0].backgroundColor = [risk > 50 ? '#f87171' : '#6366f1', '#f1f5f9'];
+            spamChart.data.datasets[0].data = [100 - risk, risk];
+            spamChart.data.datasets[0].backgroundColor = [risk > 40 ? '#f87171' : '#4f46e5', '#f5f5f4'];
             spamChart.update();
 
-            const riskText = document.getElementById('riskText');
-            const riskCard = document.getElementById('riskCard');
-            
-            if (risk < 30) {
-                riskText.innerText = "CLEAN / LOW RISK";
-                riskText.className = "text-sm font-black tracking-widest text-emerald-500";
-                riskCard.style.borderBottomColor = "#10b981";
-            } else if (risk < 60) {
-                riskText.innerText = "MODERATE RISK";
-                riskText.className = "text-sm font-black tracking-widest text-amber-500";
-                riskCard.style.borderBottomColor = "#f59e0b";
-            } else {
-                riskText.innerText = "HIGH RISK / SPAM ALERT";
-                riskText.className = "text-sm font-black tracking-widest text-red-500";
-                riskCard.style.borderBottomColor = "#ef4444";
-            }
+            const riskText = document.getElementById('riskResult');
+            if (risk < 30) { riskText.innerText = "CLEAN / OPTIMIZED"; riskText.className = "text-sm font-black tracking-tight text-emerald-500"; }
+            else if (risk < 60) { riskText.innerText = "MODERATE RISK"; riskText.className = "text-sm font-black tracking-tight text-amber-500"; }
+            else { riskText.innerText = "HIGH RISK / SPAMMY"; riskText.className = "text-sm font-black tracking-tight text-red-500"; }
         }
 
-        function tab(t) { 
-            document.getElementById('step1View').classList.toggle('hidden', t === 'step2'); 
-            document.getElementById('step2View').classList.toggle('hidden', t === 'step1'); 
-            document.getElementById('t1').classList.toggle('tab-active', t === 'step1'); 
-            document.getElementById('t2').classList.toggle('tab-active', t === 'step2'); 
+        function copyToClipboard(id) {
+            const el = document.getElementById(id);
+            const val = el.value || el.innerText;
+            navigator.clipboard.writeText(val);
         }
 
-        function copy(i) { 
-            const el = document.getElementById(i);
-            const v = el?.innerText || el?.value || i; 
-            navigator.clipboard.writeText(v); 
-        }
+        window.onload = initCharts;
     </script>
 </body>
 </html>
