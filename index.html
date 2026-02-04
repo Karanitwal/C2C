@@ -3,41 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C2C Verified Outreach | Suite</title>
+    <title>C2C Verified Outreach | Pro Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Modern Font Stack with Aptos priority */
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        :root { --brand-primary: #0f172a; --brand-accent: #6366f1; --bg-main: #f8fafc; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-main); color: #1e293b; }
-        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 1); border-radius: 1.25rem; }
-        .input-pill { width: 100%; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1.5px solid #e2e8f0; font-size: 0.875rem; transition: all 0.2s; background: white; }
-        .input-pill:focus { outline: none; border-color: var(--brand-accent); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
-        .btn-action { background: var(--brand-primary); color: white; padding: 0.85rem 1.5rem; border-radius: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .btn-action:hover { background: #000; transform: translateY(-1px); }
-        .score-circle { position: relative; width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; background: radial-gradient(closest-side, white 80%, transparent 81% 100%), conic-gradient(#6366f1 0%, #e2e8f0 0); transition: background 0.5s ease; }
-        .tab-btn { flex: 1; padding: 0.75rem; font-size: 0.75rem; font-weight: 700; border-radius: 0.5rem; transition: all 0.2s; color: #64748b; }
-        .tab-active { background: #0f172a; color: white; }
-        .chart-container { position: relative; width: 100%; height: 160px; }
-        .loading-dots { display: inline-flex; gap: 2px; }
-        .loading-dots div { width: 4px; height: 4px; background: currentColor; border-radius: 50%; animation: blink 1.4s infinite both; }
-        @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
+        
+        :root { 
+            --brand-primary: #0f172a; 
+            --brand-accent: #6366f1; 
+            --bg-main: #f8fafc; 
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-main); 
+            color: #1e293b; 
+            margin: 0; 
+        }
+
+        /* Specific style for the email body */
+        .email-body-text {
+            font-family: 'Aptos', 'Segoe UI', 'Calibri', sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #334155;
+        }
+
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(226, 232, 240, 1); 
+            border-radius: 1.25rem; 
+        }
+
+        .input-pill { 
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border-radius: 0.75rem; 
+            border: 1.5px solid #e2e8f0; 
+            font-size: 0.875rem; 
+            transition: all 0.2s; 
+            background: white; 
+        }
+
+        .input-pill:focus { 
+            outline: none; 
+            border-color: var(--brand-accent); 
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); 
+        }
+
+        .btn-action { 
+            background: var(--brand-primary); 
+            color: white; 
+            padding: 0.85rem 1.5rem; 
+            border-radius: 0.75rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.5rem; 
+            border: none; 
+        }
+
+        .btn-action:hover { 
+            background: #000; 
+            transform: translateY(-1px); 
+        }
+
+        .score-circle { 
+            position: relative; 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto; 
+            background: radial-gradient(closest-side, white 80%, transparent 81% 100%), conic-gradient(#6366f1 0%, #e2e8f0 0); 
+            transition: background 0.5s ease; 
+        }
+
+        .tab-btn { 
+            flex: 1; 
+            padding: 0.75rem; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            border-radius: 0.5rem; 
+            transition: all 0.2s; 
+            color: #64748b; 
+            background: transparent; 
+            border: none; 
+            cursor: pointer; 
+        }
+
+        .tab-active { 
+            background: #0f172a; 
+            color: white; 
+        }
+
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            height: 160px; 
+        }
+
         .hidden { display: none; }
+
+        .loading-dots { 
+            display: inline-flex; 
+            gap: 2px; 
+        }
+
+        .loading-dots div { 
+            width: 4px; 
+            height: 4px; 
+            background: currentColor; 
+            border-radius: 50%; 
+            animation: blink 1.4s infinite both; 
+        }
+
+        @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
+        <!-- Header -->
         <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl">V</div>
                 <div>
                     <h1 class="text-xl font-extrabold tracking-tight">C2C Verified<span class="text-indigo-600">Outreach</span></h1>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Intelligence Suite</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Intelligence Suite Pro</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <button onclick="toggleSettings()" class="p-2 hover:bg-slate-100 rounded-full text-slate-400">⚙️ Settings</button>
+                <button onclick="toggleSettings()" class="p-2 hover:bg-slate-100 rounded-full text-slate-400 bg-transparent border-none cursor-pointer">⚙️ Settings</button>
                 <div class="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase">
                     <span id="apiStatusDot" class="w-2 h-2 rounded-full bg-slate-300"></span>
                     <span id="apiStatusText">AI: Offline</span>
@@ -45,74 +150,91 @@
             </div>
         </header>
 
-        <!-- API Settings -->
+        <!-- API Settings Modal -->
         <div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
                 <h3 class="text-lg font-bold mb-2">Service Settings</h3>
-                <p class="text-sm text-slate-500 mb-6">Enter your Gemini API key to enable AI features.</p>
+                <p class="text-sm text-slate-500 mb-6">Enter your Gemini API key to enable AI Humanizing and Pattern Audits.</p>
                 <input type="password" id="apiKeyInput" class="input-pill mb-4" placeholder="Gemini API Key">
                 <div class="flex gap-3">
                     <button onclick="saveApiKey()" class="btn-action flex-1">Save Key</button>
-                    <button onclick="toggleSettings()" class="flex-1 font-bold text-slate-400">Cancel</button>
+                    <button onclick="toggleSettings()" class="flex-1 font-bold text-slate-400 bg-transparent border-none cursor-pointer">Cancel</button>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left: Inputs -->
             <aside class="lg:col-span-3 space-y-6">
                 <div class="glass-panel p-6 border-t-4 border-indigo-500 shadow-sm">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Email Discovery</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Lead Discovery</h3>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="firstName" class="input-pill text-xs" placeholder="First">
-                            <input type="text" id="lastName" class="input-pill text-xs" placeholder="Last">
+                            <input type="text" id="firstName" class="input-pill text-xs" placeholder="First Name">
+                            <input type="text" id="lastName" class="input-pill text-xs" placeholder="Last Name">
                         </div>
                         <input type="text" id="domain" class="input-pill text-xs" placeholder="Domain (google.com)">
                         <div class="flex gap-2">
                             <button onclick="predictEmails()" class="btn-action flex-1 py-2 text-xs">Predict</button>
-                            <button onclick="auditDomain()" class="bg-slate-100 px-3 rounded-lg text-slate-500 hover:text-indigo-600 transition-colors">⚖️</button>
+                            <button onclick="auditDomain()" class="bg-slate-100 px-3 rounded-lg text-slate-500 hover:text-indigo-600 transition-colors border-none cursor-pointer">⚖️</button>
                         </div>
-                        <div id="emailResults" class="hidden space-y-2 mt-4 max-h-48 overflow-y-auto pr-1"></div>
+                        <div id="emailResults" class="hidden space-y-2 mt-4 max-h-48 overflow-y-auto pr-1 text-[10px] font-mono"></div>
                     </div>
                 </div>
                 <div class="glass-panel p-6">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Workspace</h3>
                     <div class="space-y-4">
-                        <input type="text" id="roleInput" class="input-pill text-xs" placeholder="Target Role">
-                        <input type="text" id="stackInput" class="input-pill text-xs" placeholder="Tech Highlights">
-                        <button onclick="generate()" class="btn-action w-full text-xs">Build Sequence</button>
+                        <input type="text" id="roleInput" class="input-pill text-xs" placeholder="Target Role Title">
+                        <input type="text" id="stackInput" class="input-pill text-xs" placeholder="Primary Tech Stack">
+                        <button onclick="generate()" class="btn-action w-full text-xs">Generate Sequence</button>
                     </div>
                 </div>
             </aside>
 
+            <!-- Center: Workspace -->
             <main class="lg:col-span-6 space-y-6">
-                <div class="glass-panel overflow-hidden border-2 border-slate-900 shadow-2xl">
+                <div class="glass-panel overflow-hidden border-2 border-slate-900 shadow-2xl bg-white">
                     <nav class="flex bg-slate-900 p-1">
-                        <button onclick="tab('step1')" id="t1" class="tab-btn tab-active">1. PERMISSION CHECK</button>
-                        <button onclick="tab('step2')" id="t2" class="tab-btn">2. PITCH FOLLOW-UP</button>
+                        <button onclick="tab('step1')" id="t1" class="tab-btn tab-active">1. THE FEELER</button>
+                        <button onclick="tab('step2')" id="t2" class="tab-btn">2. THE PITCH</button>
                     </nav>
                     <div class="p-8">
+                        <!-- Step 1 View -->
                         <div id="step1View" class="space-y-6">
-                            <div class="flex justify-between items-center"><h2 class="text-xl font-bold">Initial Query</h2><button onclick="copy('msg1')" class="text-xs font-bold text-indigo-600">Copy Body</button></div>
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold">Initial Inquiry</h2>
+                                <button onclick="copy('msg1')" class="text-xs font-bold text-indigo-600 bg-transparent border-none cursor-pointer hover:underline">Copy Body</button>
+                            </div>
                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Subject</label>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Subject Line</label>
                                 <input type="text" id="sub1" readonly class="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none" value="---">
                             </div>
-                            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 min-h-[160px] relative">
-                                <p id="msg1" class="text-sm text-slate-600 leading-relaxed italic">Generating...</p>
-                                <button onclick="humanize()" class="absolute bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg hover:bg-indigo-700 flex items-center gap-2">✨ Humanize <div id="aiLoad" class="hidden"><div class="loading-dots"><div></div><div></div><div></div></div></div></button>
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 min-h-[200px] relative shadow-inner">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-2">Email Body (Aptos 12pt)</label>
+                                <div id="msg1" class="email-body-text whitespace-pre-wrap italic opacity-60">Generate a sequence to see the draft here...</div>
+                                <button onclick="humanize()" class="absolute bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg hover:bg-indigo-700 flex items-center gap-2 border-none cursor-pointer">
+                                    ✨ AI Humanize 
+                                    <div id="aiLoad" class="hidden"><div class="loading-dots"><div></div><div></div><div></div></div></div>
+                                </button>
                             </div>
                         </div>
+                        <!-- Step 2 View -->
                         <div id="step2View" class="space-y-6 hidden">
-                            <div class="flex justify-between items-center"><h2 class="text-xl font-bold">Submission Follow-up</h2><button onclick="copy('msg2')" class="text-xs font-bold text-indigo-600">Copy Body</button></div>
-                            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 min-h-[200px]"><p id="msg2" class="text-sm text-slate-600 leading-relaxed italic">---</p></div>
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold">Submission Follow-up</h2>
+                                <button onclick="copy('msg2')" class="text-xs font-bold text-indigo-600 bg-transparent border-none cursor-pointer hover:underline">Copy Body</button>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 min-h-[220px] shadow-inner">
+                                <div id="msg2" class="email-body-text whitespace-pre-wrap italic opacity-60">Waiting for generation...</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </main>
 
-            <!-- Right Panel -->
+            <!-- Right: Audit -->
             <section class="lg:col-span-3 space-y-6">
+                <!-- Humanity Score -->
                 <div class="glass-panel p-8 text-center bg-white border-b-4 border-indigo-600 shadow-xl">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Humanity Score</h3>
                     <div id="humanityGauge" class="score-circle">
@@ -121,82 +243,166 @@
                             <span class="block text-[10px] font-bold text-slate-400 uppercase mt-1">/ 100</span>
                         </div>
                     </div>
-                    <p id="scoreLabel" class="text-xs font-bold mt-6 text-slate-400 uppercase tracking-wider">Audit Needed</p>
+                    <p id="scoreLabel" class="text-xs font-bold mt-6 text-slate-400 uppercase tracking-wider">Audit Pending</p>
                 </div>
-                <div class="glass-panel p-6 text-center">
+
+                <!-- Spam Audit Result -->
+                <div class="glass-panel p-6 text-center border-b-4 border-slate-200" id="riskCard">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Spam Risk Audit</h3>
-                    <div class="chart-container"><canvas id="spamChart"></canvas></div>
+                    <div class="chart-container">
+                        <canvas id="spamChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-2 rounded-lg bg-slate-50 border border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Risk Result</p>
+                        <p id="riskText" class="text-sm font-black tracking-widest text-slate-300">AWAITING DATA</p>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
 
     <script>
-        let apiKey = localStorage.getItem('c2c_auth_key') || "";
+        let apiKey = localStorage.getItem('c2c_auth_v3') || "";
         let spamChart;
+
         window.onload = () => { initCharts(); updateStatus(); };
+
         function toggleSettings() { document.getElementById('settingsModal').classList.toggle('hidden'); }
-        function saveApiKey() { apiKey = document.getElementById('apiKeyInput').value; localStorage.setItem('c2c_auth_key', apiKey); updateStatus(); toggleSettings(); }
-        function updateStatus() { const d = document.getElementById('apiStatusDot'); const t = document.getElementById('apiStatusText'); d.className = apiKey ? "w-2 h-2 rounded-full bg-emerald-500" : "w-2 h-2 rounded-full bg-slate-300"; t.innerText = apiKey ? "AI Engine: Ready" : "AI: Offline"; }
+        function saveApiKey() { 
+            apiKey = document.getElementById('apiKeyInput').value; 
+            localStorage.setItem('c2c_auth_v3', apiKey); 
+            updateStatus(); 
+            toggleSettings(); 
+        }
+
+        function updateStatus() { 
+            const d = document.getElementById('apiStatusDot'); 
+            const t = document.getElementById('apiStatusText'); 
+            d.className = apiKey ? "w-2 h-2 rounded-full bg-emerald-500" : "w-2 h-2 rounded-full bg-slate-300"; 
+            t.innerText = apiKey ? "AI: Connected" : "AI: Offline"; 
+        }
+
         const banks = { 
-            subs: [(r)=>`Quick check: ${r} role`, (r)=>`C2C for ${r}?`, (r)=>`Question re: ${r}`],
+            subs: [(r)=>`Quick check: ${r} role`, (r)=>`C2C open for ${r}?`, (r)=>`Question regarding ${r}`],
             feeler: (n,r)=>`Hi ${n},\n\nI noticed you're looking for a ${r}. Are you currently entertaining C2C submissions for this opening?\n\nIf so, I have a strong consultant I can share details on. Please let me know if you're open to it.\n\nBest,\n[Your Name]`,
             pitch: (n,r,s)=>`Thanks ${n}.\n\nAs discussed, here is the resume for our consultant. They have over 10 years experience in ${s} and are available immediately for C2C projects.\n\nLmk if you want to chat!`
         };
-        function initCharts() { const ctx = document.getElementById('spamChart').getContext('2d'); spamChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Safe', 'Risk'], datasets: [{ data: [100, 0], backgroundColor: ['#e2e8f0', '#f1f5f9'], borderWidth: 0 }] }, options: { cutout: '80%', circumference: 180, rotation: 270, plugins: { legend: { display: false } } } }); }
+
+        function initCharts() {
+            const ctx = document.getElementById('spamChart').getContext('2d');
+            spamChart = new Chart(ctx, { 
+                type: 'doughnut', 
+                data: { labels: ['Safe', 'Risk'], datasets: [{ data: [100, 0], backgroundColor: ['#e2e8f0', '#f1f5f9'], borderWidth: 0 }] }, 
+                options: { cutout: '80%', circumference: 180, rotation: 270, plugins: { legend: { display: false } } } 
+            });
+        }
+
         function predictEmails() {
             const f = document.getElementById('firstName').value.trim().toLowerCase();
             const l = document.getElementById('lastName').value.trim().toLowerCase();
             const d = document.getElementById('domain').value.trim().toLowerCase();
             if(!f || !l || !d) return;
-            const res = document.getElementById('emailResults'); res.classList.remove('hidden'); res.innerHTML = `<p class="text-[10px] font-bold text-indigo-600 mb-2">PREDICTIONS</p>`;
+            const res = document.getElementById('emailResults'); res.classList.remove('hidden'); 
+            res.innerHTML = `<p class="font-bold text-indigo-600 mb-2">PREDICTIONS</p>`;
             [`${f}.${l}@${d}`, `${f.charAt(0)}${l}@${d}`, `${f}@${d}`].forEach(e => {
-                res.innerHTML += `<div class="flex justify-between items-center bg-white p-2 rounded-lg border mb-1 shadow-sm text-[10px] font-mono"><span>${e}</span><button onclick="copy('${e}')" class="text-indigo-600 font-bold">COPY</button></div>`;
+                res.innerHTML += `<div class="flex justify-between items-center bg-white p-2 rounded-lg border mb-1 shadow-sm"><span>${e}</span><button onclick="copy('${e}')" class="text-indigo-600 font-bold bg-transparent border-none cursor-pointer">COPY</button></div>`;
             });
         }
+
         async function auditDomain() {
             const d = document.getElementById('domain').value; if(!d || !apiKey) return alert("Add API key first.");
             try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `Email pattern for ${d}` }] }] }) });
-                const dat = await r.json(); alert(dat.candidates[0].content.parts[0].text);
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `Likely email pattern for ${d}` }] }] }) });
+                const dat = await r.json(); alert("Audit: " + dat.candidates[0].content.parts[0].text);
             } catch (e) { alert("API Error."); }
         }
+
         function generate() {
             const r = document.getElementById('roleInput').value || "the role";
             const n = document.getElementById('firstName').value || "there";
-            const s = document.getElementById('stackInput').value || "tech";
+            const s = document.getElementById('stackInput').value || "tech stack";
             const sub = banks.subs[Math.floor(Math.random()*3)](r);
             const m1 = banks.feeler(n,r);
             document.getElementById('sub1').value = sub;
-            document.getElementById('msg1').innerText = m1;
-            document.getElementById('msg2').innerText = banks.pitch(n,r,s);
+            const msg1El = document.getElementById('msg1');
+            msg1El.innerText = m1;
+            msg1El.classList.remove('italic', 'opacity-60');
+            
+            const msg2El = document.getElementById('msg2');
+            msg2El.innerText = banks.pitch(n,r,s);
+            msg2El.classList.remove('italic', 'opacity-60');
+            
             analyze(sub, m1);
         }
+
         async function humanize() {
-            const cur = document.getElementById('msg1').innerText; if(!apiKey || cur.includes("Generating")) return alert("Add API Key and Generate Draft.");
+            const cur = document.getElementById('msg1').innerText; if(!apiKey || cur.includes("Generate")) return alert("Add API Key and Generate first.");
             document.getElementById('aiLoad').classList.remove('hidden');
             try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `Rewrite this C2C inquiry to be more human. Max 2 sentences. No bot cliches. Text: ${cur}` }] }] }) });
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `Rewrite this C2C inquiry to be more human. Max 2 sentences. No bot cliches. Body: ${cur}` }] }] }) });
                 const dat = await r.json(); const txt = dat.candidates[0].content.parts[0].text.trim();
-                document.getElementById('msg1').innerText = txt; analyze(document.getElementById('sub1').value, txt);
+                document.getElementById('msg1').innerText = txt; 
+                analyze(document.getElementById('sub1').value, txt);
             } catch (e) { alert("AI Error."); }
             document.getElementById('aiLoad').classList.add('hidden');
         }
+
         function analyze(s, m) {
             const c = (s + m).toLowerCase();
-            let score = 60; if (m.length < 250) score += 20; if (c.includes("?")) score += 20; if (c.includes("hope this email finds you well")) score -= 40;
+            
+            // Humanity Logic
+            let score = 65; 
+            if (m.length < 250) score += 15; 
+            if (c.includes("?")) score += 10; 
+            if (c.includes("hope this email finds you well")) score -= 40;
             score = Math.min(Math.max(score, 10), 98);
+            
             document.getElementById('scoreVal').innerText = Math.round(score);
             document.getElementById('humanityGauge').style.background = `radial-gradient(closest-side, white 80%, transparent 81% 100%), conic-gradient(#6366f1 ${score}%, #e2e8f0 0)`;
             document.getElementById('scoreLabel').innerText = score > 80 ? "HUMAN AUTHENTIC" : "BOT PATTERN DETECTED";
             document.getElementById('scoreLabel').className = `text-xs font-bold mt-6 tracking-wider ${score > 80 ? 'text-emerald-500' : 'text-red-500'}`;
-            let risk = 10; if (c.includes("urgent")) risk += 30; if (m.length > 500) risk += 20;
+
+            // Spam Risk Logic
+            let risk = 5; 
+            const triggers = ["urgent", "guarantee", "immediate", "winner", "commission", "100%", "attachment"];
+            triggers.forEach(t => { if(c.includes(t)) risk += 25; });
+            if (m.length > 500) risk += 20;
+            risk = Math.min(risk, 95);
+
             spamChart.data.datasets[0].data = [100 - risk, risk]; 
-            spamChart.data.datasets[0].backgroundColor = [risk > 30 ? '#f87171' : '#6366f1', '#f1f5f9'];
+            spamChart.data.datasets[0].backgroundColor = [risk > 50 ? '#f87171' : '#6366f1', '#f1f5f9'];
             spamChart.update();
+
+            const riskText = document.getElementById('riskText');
+            const riskCard = document.getElementById('riskCard');
+            
+            if (risk < 30) {
+                riskText.innerText = "CLEAN / LOW RISK";
+                riskText.className = "text-sm font-black tracking-widest text-emerald-500";
+                riskCard.style.borderBottomColor = "#10b981";
+            } else if (risk < 60) {
+                riskText.innerText = "MODERATE RISK";
+                riskText.className = "text-sm font-black tracking-widest text-amber-500";
+                riskCard.style.borderBottomColor = "#f59e0b";
+            } else {
+                riskText.innerText = "HIGH RISK / SPAM ALERT";
+                riskText.className = "text-sm font-black tracking-widest text-red-500";
+                riskCard.style.borderBottomColor = "#ef4444";
+            }
         }
-        function tab(t) { document.getElementById('step1View').classList.toggle('hidden', t === 'step2'); document.getElementById('step2View').classList.toggle('hidden', t === 'step1'); document.getElementById('t1').classList.toggle('tab-active', t === 'step1'); document.getElementById('t2').classList.toggle('tab-active', t === 'step2'); }
-        function copy(i) { const v = document.getElementById(i)?.innerText || document.getElementById(i)?.value || i; navigator.clipboard.writeText(v); }
+
+        function tab(t) { 
+            document.getElementById('step1View').classList.toggle('hidden', t === 'step2'); 
+            document.getElementById('step2View').classList.toggle('hidden', t === 'step1'); 
+            document.getElementById('t1').classList.toggle('tab-active', t === 'step1'); 
+            document.getElementById('t2').classList.toggle('tab-active', t === 'step2'); 
+        }
+
+        function copy(i) { 
+            const el = document.getElementById(i);
+            const v = el?.innerText || el?.value || i; 
+            navigator.clipboard.writeText(v); 
+        }
     </script>
 </body>
 </html>
